@@ -1,0 +1,262 @@
+<!DOCTYPE html5>
+<html>
+<head>
+  <script src="http://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="index.css"/>
+  <title>Gun Clicker</title>
+  <style>
+    body {
+      background-image: radial-gradient(circle at center, #CCC 0%, #333 100%);/*#999;*/
+      border: 5px solid #000;
+      padding: 10px;
+      margin: 0px;
+    }
+
+    #gun {
+      display: block;
+      margin: auto;
+      width: 33vw;
+    }
+
+    #text {
+      display: block;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 1.5em;
+      background-color: #CCC;
+      background: linear-gradient(to bottom right, #CCC, #666);
+      border-radius: 5px;
+      margin-bottom: 0px;
+      margin-right: 208px;
+    }
+
+    #flag {
+      width: 100px;
+      margin-bottom: 10px;
+      padding-top: 75px
+    }
+
+    #gunImage {
+      display: block;
+      margin: 0;
+      padding: 0px 10px 10px 10px;
+    }
+    #gunImage:hover {
+      transform: translateX(10px);
+    }
+    #gunImage:active {
+      transform: translateX(-10px);
+    }
+
+    #counter {
+      display: inline-block;
+      border-radius: 5px;
+      margin-top: 10px;
+      padding: 15px;
+      font-size: 2em;
+      border-radius: 5px;
+      border-style: outset;
+      border: 2px solid #AAA;
+    }
+
+    #upgradeContainer {
+      display: absolute;
+      height: 100%;
+      width: 200px;
+      float: right;
+      background-color: #666;
+      border-radius: 5px;
+      border: 3px solid #333;
+      overflow: hidden;
+    }
+    .upgrade {
+      display: block;
+      height: 80px;
+      border: 3px solid #A00;
+      margin: 5px;
+      border-radius: 7px;
+      padding: 3px;
+      padding-bottom: 0px;
+      background-color: #800;
+    }
+    .upgradeImage {
+      height: 40px;
+      width: 40px;
+      border: 2px solid #ACA;
+      padding: 5px;
+      border-radius: 5px;
+      margin-bottom: 7px;
+    }
+    .upgradeTitle {
+      font-weight: bold;
+      font-family: sans-serif;
+    }
+    .active {
+      background-color: #696;
+      border: 3px solid #363;
+    }
+  </style>
+</head>
+<body>
+  <div id="upgradeContainer">
+    <div class="upgrade" title="Better Bullets = Moar Money." onclick="addToClickModifier(1, 20, 'upgrade3');" id="upgrade3">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Big Bullets</span></center>
+    </div>
+    <div class="upgrade" title="Even Better Bullets = Much Moar Money." onclick="addToClickModifier(3, 350, 'upgrade5');" id="upgrade5">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Banana Bullets</span></center>
+    </div>
+    <div class="upgrade" title="Adds a slow auto-clicker." onclick="addToIdleModifier(1, 250, 'upgrade0');" id="upgrade0">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 1 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a slowish auto-clicker." onclick="addToIdleModifier(4, 300, 'upgrade1');" id="upgrade1">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 2 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a faster auto-clicker." onclick="addToIdleModifier(15, 500, 'upgrade2');" id="upgrade2">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 3 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a faster auto-clicker." onclick="addToIdleModifier(25, 700, 'upgrade4');" id="upgrade4">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 4 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a faster auto-clicker." onclick="addToIdleModifier(40, 1200, 'upgrade6');" id="upgrade6">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 5 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a faster auto-clicker." onclick="addToIdleModifier(40, 1800, 'upgrade7');" id="upgrade7">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 6 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a faster auto-clicker." onclick="addToIdleModifier(40, 2700, 'upgrade8');" id="upgrade8">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 7 Auto-Clicker</span></center>
+    </div>
+    <div class="upgrade" title="Adds a faster auto-clicker." onclick="addToIdleModifier(40, 3000, 'upgrade9');" id="upgrade9">
+      <center><img src="upgrade.png" class="upgradeImage"/></center>
+      <center><span class="upgradeTitle">Level 8 Auto-Clicker</span></center>
+    </div>
+  </div>
+  <center>
+    <div id="text">
+      Click The Gun
+    </div>
+  </center>
+  <div id="gunContainer">
+    <center>
+      <p id="counter">
+        0
+      </p>
+      <img id="gunImage" src="gun.png" onclick="handleButtonClick()">
+    </center>
+    <audio id="gunNoise">
+      <source src="gunNoise.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+  <center>
+    Auto-clickers are <del>recommended</del> not allowed.<br/>
+    <br>
+    <img src="USA_flag.png" id="flag"/>
+  </center>
+
+
+  <script>
+    const upgrades = [
+      [250, "upgrade0"],
+      [300, "upgrade1"],
+      [500, "upgrade2"],
+      [20, "upgrade3"],
+      [700, "upgrade4"],
+      [350, "upgrade5"],
+      [1200, "upgrade6"],
+      [1800, "upgrade7"],
+      [2700, "upgrade8"],
+      [3000, "upgrade9"]
+    ];
+
+    let CLICKS = 0;
+    let MONEY = 0;
+    let clickModifier = 1;
+    let idleClickModifier = 0;
+
+    setInterval(() => {
+      MONEY += idleClickModifier;
+    }, 1000);
+    setInterval(() => {
+      setMoney();
+      checkAvailableUpgrades();
+    }, 200);
+
+    /*
+    $("#gunImage").click(() => {
+      playGunNoise();
+      setMoney();
+      doGunFlash();
+      CLICKS += clickModifier;
+      MONEY += clickModifier;
+    });
+    */
+
+    function handleButtonClick() {
+      playGunNoise();
+      setMoney();
+      doGunFlash();
+      CLICKS += clickModifier;
+      MONEY += clickModifier;
+    }
+
+    function setMoney() {
+      document.getElementById("counter").innerHTML = MONEY;
+    }
+
+    function playGunNoise() {
+      document.getElementById('gunNoise').load();
+      document.getElementById('gunNoise').play();
+    }
+
+    function doGunFlash() {
+      document.getElementById('gunImage').src = 'gunWithFlash.png';
+      document.getElementById('gunImage').style.marginLeft = '100px;';
+      setTimeout(() => {
+        document.getElementById('gunImage').src = 'gun.png';
+      }, 5);
+    }
+
+    function addToClickModifier(num, check, removeId) {
+      if(MONEY >= check) {
+        clickModifier += num;
+        MONEY -= check;
+        setMoney();
+        document.getElementById(removeId).style.display = 'none';
+      }
+    }
+
+    function addToIdleModifier(num, check, removeId) {
+      if(MONEY >= check) {
+        idleClickModifier += num;
+        MONEY -= check;
+        setMoney();
+        document.getElementById(removeId).style.display = 'none';
+      }
+    }
+
+    function checkAvailableUpgrades() {
+      upgrades.forEach(upgrade => {
+        if(MONEY >= upgrade[0]) {
+          document.getElementById(upgrade[1]).classList.add("active");
+        } else {
+          document.getElementById(upgrade[1]).classList.remove("active");
+        }
+      });
+    }
+  </script>
+  <!--center>To cheat, subscribe to  shoothemoon on youtube and tell him in the comments that you have subscribed than he will tell you haw to cheat!</center-->
+</body>
+
+<script>
+  require('./renderer.js');
+</script>
+</html>
